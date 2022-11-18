@@ -55,12 +55,11 @@
 			</view>
 		</uni-popup>
 
-		<uni-popup ref="popupQuery" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color" >	
-			<slot name="find">
-			<view class="screen-box"> 
-					<button @click="queryQueryIn" class="butmin" type="primary" >查找</button>
+		<uni-popup  ref="popupQuery" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color" >	
+			<view class="screen-box">
+				<!-- //插槽数据 -->
+				<slot name="find"></slot>
 			</view>
-			</slot>
 		</uni-popup>
 		
 		<uni-popup ref="popupForm" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color">
@@ -74,6 +73,9 @@
 						      v-model="formData[item.name]"
 						      :localdata="item.range"						      
 						    ></uni-data-select>
+						<uni-datetime-picker focus class="uni-input query-input"  type="date" :clear-icon="false" 
+						v-if="item.kind=='date'"  
+						v-model="formData[item.name]"  />	
 					</uni-forms-item>
 					</scroll-view>
 					<view class="uni-btn-v">
@@ -93,13 +95,21 @@ export default {
 <script src="./main.js" />
 <style lang="scss">
 
-	/* #ifdef H5 */
-
+ 
+      
+	  
+    
+	/* #ifdef MP-WEIXIN */
+	
 	/*  #endif*/
 	
+
 	.page-content {
+
 		width: 100%;
+		/* #ifdef H5 */
 		height: 100%;
+		/*  #endif*/
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -154,7 +164,7 @@ export default {
 		.list-crad-box{
 			width: 100%;
 			.uni-list {
-		     padding-top: 7rem;
+		     padding-top: 5.9rem;
 			}
 			 .uni-list-item__container{
 				margin: 0 !important;
@@ -196,7 +206,10 @@ export default {
 		.paging-box{
 			margin-top: 115px;
 		}
-		
+		//查找弹窗
+		.screen-box{
+			padding-bottom: 50px;
+		}
 		//帮助弹窗
 		.popup-help-box{
 			padding-left: 15px;
@@ -248,6 +261,7 @@ export default {
 					}
 				}
 			}
+			
 		}
 	}
 	
