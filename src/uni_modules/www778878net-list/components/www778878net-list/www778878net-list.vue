@@ -8,12 +8,41 @@
 			<view class="menu-box">
 				<button v-if="isCanHelp" @click="helpClick" class="query-but butmin" type="primary" >帮助</button>
 				<button v-if="isCanFind" @click="queryClick" class="query-but butmin"   >查找</button>
-				<button v-if="isCanAdd" @click="formedit()" class="query-but butmin"  >新增</button>
+				<button v-if="isCanAdd" @click="formedit()" class="query-but butmin"  >新增</button> 
 				<slot name="topbotton"  ></slot>
 			</view>
 			<view class="summary-box">
 				<text>{{topText}}</text> 
 			</view>
+		</view>
+		
+		<view class="example add_fade">
+				<uni-transition ref="ani" custom-class="transition" mode-class='fade' 
+					:show="isFormShow" 
+					>
+			
+					<view class="popup-set-box">
+						<uni-forms  ref="form78" :modelValue="formData"  :rules="rulesForm">
+							<scroll-view scroll-top="0" scroll-y="true" class="form-srcoll-box">						
+							 <uni-forms-item v-for="(item,index) in colsobj"   :label="item.head" :name="item.name" :key="index">
+								<uni-easyinput v-if="item.kind=='input'"   class="type-input"  
+								type="text" v-model="formData[item.name]" placeholder="请输入" />
+								<uni-data-select   v-if="item.kind=='select'"  
+									  v-model="formData[item.name]"
+									  :localdata="item.range"						      
+									></uni-data-select>
+								<uni-datetime-picker focus class="uni-input query-input"  type="date" :clear-icon="false" 
+								v-if="item.kind=='date'"  
+								v-model="formData[item.name]"  />	
+							</uni-forms-item>
+							</scroll-view>
+							<view class="uni-btn-v">
+								<button form-type="submit" @click="submit('form78')" type="primary">提交</button>
+								<button form-type="reset"  >清空</button>
+							</view>
+						</uni-forms> 
+					</view>
+				</uni-transition>
 		</view>
 		<z-paging class="paging-box"  ref="paging" default-page-size="10" v-model="listData" @query="queryList">
 			<uni-list class="list-crad-box">
@@ -55,36 +84,15 @@
 			</view>
 		</uni-popup>
 
-		<uni-popup  ref="popupQuery" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color" >	
-			<view class="screen-box">
-				<!-- //插槽数据 -->
-				<slot name="find"></slot>
+		<uni-popup ref="popupQuery" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color" >	
+			<slot name="find">
+			<view class="screen-box"> 
+					<button @click="queryQueryIn" class="butmin" type="primary" >查找</button>
 			</view>
+			</slot>
 		</uni-popup>
 		
-		<uni-popup ref="popupForm" type="bottom" :is-mask-click="true" safeArea backgroundColor="$uni-bg-color">
-			<view class="popup-set-box">
-				<uni-forms  ref="form78" :modelValue="formData"  :rules="rulesForm">
-					<scroll-view scroll-top="0" scroll-y="true" class="form-srcoll-box">						
-					 <uni-forms-item v-for="(item,index) in colsobj"   :label="item.head" :name="item.name" :key="index">
-						<uni-easyinput v-if="item.kind=='input'"   class="type-input"  
-						type="text" v-model="formData[item.name]" placeholder="请输入" />
-						<uni-data-select   v-if="item.kind=='select'"  
-						      v-model="formData[item.name]"
-						      :localdata="item.range"						      
-						    ></uni-data-select>
-						<uni-datetime-picker focus class="uni-input query-input"  type="date" :clear-icon="false" 
-						v-if="item.kind=='date'"  
-						v-model="formData[item.name]"  />	
-					</uni-forms-item>
-					</scroll-view>
-					<view class="uni-btn-v">
-						<button form-type="submit" @click="submit('form78')" type="primary">提交</button>
-						<button form-type="reset"  >清空</button>
-					</view>
-				</uni-forms> 
-			</view>
-		</uni-popup>
+		
 	</view>
 </template>
 <script>
@@ -92,24 +100,23 @@ export default {
 	name:"www778878net-list",
 }  
 </script>
+
 <script src="./main.js" />
 <style lang="scss">
 
- 
-      
-	  
-    
-	/* #ifdef MP-WEIXIN */
-	
+	/* #ifdef H5 */
+
 	/*  #endif*/
 	
-
-	.page-content {
-
+	.add_fade{
+		position: relative;
+		z-index: 99;
 		width: 100%;
-		/* #ifdef H5 */
+		top: 0.2rem;
+	}
+	.page-content {
+		width: 100%;
 		height: 100%;
-		/*  #endif*/
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -164,7 +171,7 @@ export default {
 		.list-crad-box{
 			width: 100%;
 			.uni-list {
-		     padding-top: 5.9rem;
+		     padding-top: 7rem;
 			}
 			 .uni-list-item__container{
 				margin: 0 !important;
@@ -206,10 +213,7 @@ export default {
 		.paging-box{
 			margin-top: 115px;
 		}
-		//查找弹窗
-		.screen-box{
-			padding-bottom: 50px;
-		}
+		
 		//帮助弹窗
 		.popup-help-box{
 			padding-left: 15px;
@@ -261,7 +265,6 @@ export default {
 					}
 				}
 			}
-			
 		}
 	}
 	

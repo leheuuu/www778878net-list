@@ -33,6 +33,7 @@ export default {
 			listData:[ ],//列表数据
 			orderby:'' ,//排序 
 			formData:{},//表单数据
+			isFormShow: false,//内容默认不显示
 		}
 	},
 	mounted() {
@@ -101,6 +102,7 @@ export default {
 		
 		}, 
 		formdel(id){
+			
 			if(this.isdebug)console.log(id)
 			if (!id || !id.length) {
 				return
@@ -126,11 +128,13 @@ export default {
 					
 				}
 			})
+		    
 		},
 		/**
 		 * 提交表单
 		 */
 		submit(ref){ 
+			this.isFormShow=false;
 			this.$refs[ref].validate().then(res => {  
 				this.$emit("savedata",{
 					formData:this.formData
@@ -164,7 +168,7 @@ export default {
 			}
 			this.formData=rowdata
 			if(this.isdebug)console.log(rowdata)
-			this.$refs.popupForm.open('bottom')
+			this.isFormShow=true;
 		},
 		modifyClick(){//修改
 			this.$refs.popupForm.open('bottom')
